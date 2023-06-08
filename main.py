@@ -2,7 +2,12 @@ from vosk import Model, KaldiRecognizer
 import pyaudio
 import json
 import pyttsx3
+import core
+from nlu.classifier import classify
+import speech_recognition as sr
 
+r = sr.Recognizer()
+r.dynamic_energy_threshold = 1000
 
 #Sinteze de voz
 engine = pyttsx3.init()
@@ -11,25 +16,35 @@ voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[-2].id)
 
 def speak(text):
+    print(text)
     engine.say(text)
     engine.runAndWait()
-
-model = Model("model_pt-br")
-recoginizer = KaldiRecognizer(model, 16000)
-
-cap     = pyaudio.PyAudio()
-stream  = cap.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8192)
-stream.start_stream()
-
+    
 while True:
-    data = stream.read(4096)
-    if len(data) == 0:
-       break
-    if recoginizer.AcceptWaveform(data):
-        result = recoginizer.Result()
-        result = json.loads(result)
+
+    with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source)
+        audio = r.listen(source)
+    
+    try:
+        result = r.recognize_google(audio, language='pt-br')
         
-        if result is not None:
-            text = result['text']
-            print(text)
+    except sr.RequestError as e:
+        result = r.recognize_vosk(audio, language='pt-br')
+        result = json.loads(result)['text']
         
+    except sr.UnknownValueError:
+        continue
+    
+    if result != "" and len(str(result).split()) > 1:
+        
+        entity = classify(result)
+            
+        print(entity)
+    
+        if entity == "time|getTime":
+            speak(core.SystemInfo.get_time())
+        elif entity == "time|getDate":
+            speak(core.SystemInfo.get_date())
+        elif entity == "home|None":
+            print(result)

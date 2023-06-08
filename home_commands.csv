@@ -1,0 +1,5 @@
+command,action
+ligar lâmpada quatro, lamp_on
+desligar lâmpada quatro, lamp_off
+ligar tv, tv_on
+desligar tv, tv_off
