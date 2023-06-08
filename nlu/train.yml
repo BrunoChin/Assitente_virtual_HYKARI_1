@@ -1,0 +1,52 @@
+commands:
+  #Time
+  - command:
+    input: Que horas são
+    entity: time
+    action: getTime
+  - command:
+    input: Quais são as horas
+    entity: time
+    action: getTime
+  - command:
+    input: Qual a horas?
+    entity: time
+    action: getTime
+  - command:
+    input: Me diga as horas.
+    entity: time
+    action: getTime
+  #Date
+  - command:
+    input: Qual é a data de hoja
+    entity: time
+    action: getDate
+  - command:
+    input: Me diga a data.
+    entity: time
+    action: getDate
+  - command:
+    input: A data por favor
+    entity: time
+    action: getDate
+  #Home
+  - command:
+    input: Ligar
+    entity: home
+    action: None
+  - command:
+    input: Ligue
+    entity: home
+    action: None
+  - command:
+    input: poderia ligar
+    entity: home
+    action: None
+  - command:
+    input: desligar
+    entity: home
+    action: None
+  - command:
+    input: desligue
+    entity: home
+    action: None
